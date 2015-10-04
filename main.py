@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 '''
-Created on 30 בספט׳ 2015
+Created: 30/09/2015
 
 @author: Nati
 '''
