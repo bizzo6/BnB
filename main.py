@@ -5,6 +5,10 @@ Created on 30 בספט׳ 2015
 @author: Nati
 '''
 
+def TestCamera():
+
+
+
 def main():
     print "Banana Nafal Blat - (BnB) v0.1"
     
