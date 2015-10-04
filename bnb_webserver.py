@@ -1,23 +1,27 @@
+# -*- coding: UTF-8 -*-
 '''
-Created on 4 באוק׳ 2015
+Created: 04/10/2015
 
 @author: Nati
 '''
 
-
-from flask import Flask, jsonify, abort, make_response
+from flask import Flask, jsonify, abort, make_response, send_file
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 from flask.ext.httpauth import HTTPBasicAuth
 
+from io import BytesIO
+
+import urllib2
+
+# Start FLASK application
 app = Flask(__name__, static_url_path="")
 api = Api(app)
 auth = HTTPBasicAuth()
         
-        
 @auth.get_password
 def get_password(username):
-    if username == 'miguel':
-        return 'python'
+    if username == 'bizzo':
+        return 'bizzo'
     return None
 
 @auth.error_handler
@@ -25,95 +29,48 @@ def unauthorized():
     # return 403 instead of 401 to prevent browsers from displaying the default
     # auth dialog
     return make_response(jsonify({'message': 'Unauthorized access'}), 403)
-
-tasks = [
-    {
-        'id': 1,
-        'title': u'Buy groceries',
-        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol',
-        'done': False
-    },
-    {
-        'id': 2,
-        'title': u'Learn Python',
-        'description': u'Need to find a good Python tutorial on the web',
-        'done': False
-    }
-]
-
-task_fields = {
-    'title': fields.String,
-    'description': fields.String,
-    'done': fields.Boolean,
-    'uri': fields.Url('task')
-}
-
-
-class TaskListAPI(Resource):
-    decorators = [auth.login_required]
-
+    
+    
+class BnBStatus(Resource):
     def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('title', type=str, required=True,
-                                   help='No task title provided',
-                                   location='json')
-        self.reqparse.add_argument('description', type=str, default="",
-                                   location='json')
-        super(TaskListAPI, self).__init__()
+        super(BnBStatus, self).__init__()
 
     def get(self):
-        return {'tasks': [marshal(task, task_fields) for task in tasks]}
+        return {'status': 'OK'}
 
     def post(self):
-        args = self.reqparse.parse_args()
-        task = {
-            'id': tasks[-1]['id'] + 1,
-            'title': args['title'],
-            'description': args['description'],
-            'done': False
-        }
-        tasks.append(task)
-        return {'task': marshal(task, task_fields)}, 201
+        abort(404)
 
+    def put(self):
+        abort(404)
 
-class TaskAPI(Resource):
-    decorators = [auth.login_required]
-
+    def delete(self):
+        abort(404)
+        
+        
+class BnBSensorAPI(Resource):
     def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('title', type=str, location='json')
-        self.reqparse.add_argument('description', type=str, location='json')
-        self.reqparse.add_argument('done', type=bool, location='json')
-        super(TaskAPI, self).__init__()
+        super(BnBSensorAPI, self).__init__()
 
-    def get(self, id):
-        task = [task for task in tasks if task['id'] == id]
-        if len(task) == 0:
-            abort(404)
-        return {'task': marshal(task[0], task_fields)}
+    def get(self,id):
+        response = urllib2.urlopen('https://www.organicfacts.net/wp-content/uploads/2013/05/Banana3.jpg')
+        snapshot = response.read()
+        return send_file(BytesIO(snapshot),attachment_filename='snapshot.jpg',mimetype='image/png')
 
-    def put(self, id):
-        task = [task for task in tasks if task['id'] == id]
-        if len(task) == 0:
-            abort(404)
-        task = task[0]
-        args = self.reqparse.parse_args()
-        for k, v in args.items():
-            if v is not None:
-                task[k] = v
-        return {'task': marshal(task, task_fields)}
+    def post(self,id):
+        abort(404)
 
-    def delete(self, id):
-        task = [task for task in tasks if task['id'] == id]
-        if len(task) == 0:
-            abort(404)
-        tasks.remove(task[0])
-        return {'result': True}
+    def put(self,id):
+        abort(404)
 
+    def delete(self,id):
+        abort(404)
+    
 
-api.add_resource(TaskListAPI, '/todo/api/v1.0/tasks', endpoint='tasks')
-api.add_resource(TaskAPI, '/todo/api/v1.0/tasks/<int:id>', endpoint='task')
-
+api.add_resource(BnBStatus,     '/bnb/api/v1.0/status/')
+api.add_resource(BnBSensorAPI,  '/bnb/api/v1.0/sensor/<int:id>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host='0.0.0.0')
+    
+# host='0.0.0.0' - make the app visible externally
