@@ -11,6 +11,9 @@ from flask.ext.httpauth import HTTPBasicAuth
 
 from io import BytesIO
 
+import sys
+import signal
+
 import urllib2
 
 # Start FLASK application
@@ -69,6 +72,13 @@ class BnBSensorAPI(Resource):
 
 api.add_resource(BnBStatus,     '/bnb/api/v1.0/status/')
 api.add_resource(BnBSensorAPI,  '/bnb/api/v1.0/sensor/<int:id>')
+
+
+def sigterm_handler(_signo, _stack_frame):
+    print("Received signal {}, exiting...".format(_signo))
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0')

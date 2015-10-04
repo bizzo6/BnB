@@ -15,7 +15,7 @@
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 NAME=bnbserver
 DAEMON="python"
-DAEMONARGS="/home/pi/projects/BnB/bnb_webserver_DEBUG.py"
+DAEMONARGS="/home/pi/projects/BnB/bnb_webserver.py"
 PIDFILE=/var/run/$NAME.pid
 LOGFILE=/var/log/$NAME.log
 
