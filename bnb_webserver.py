@@ -70,8 +70,8 @@ class BnBSensorAPI(Resource):
         abort(404)
     
 
-api.add_resource(BnBStatus,     '/bnb/api/v1.0/status/')
-api.add_resource(BnBSensorAPI,  '/bnb/api/v1.0/sensor/<int:id>')
+api.add_resource(BnBStatus,     '/bnb/api/v1/status/')
+api.add_resource(BnBSensorAPI,  '/bnb/api/v1/sensor/<int:id>')
 
 
 def sigterm_handler(_signo, _stack_frame):
@@ -81,6 +81,6 @@ def sigterm_handler(_signo, _stack_frame):
 signal.signal(signal.SIGTERM, sigterm_handler)
 
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
     
 # host='0.0.0.0' - make the app visible externally
