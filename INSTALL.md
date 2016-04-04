@@ -44,6 +44,11 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
+Now install some basic dependencies:
+```
+sudo apt-get install git vim htop
+```
+
 ## Wireless connection
 Connect your wifi dongle to the RPi and power it up.
 
