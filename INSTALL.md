@@ -44,10 +44,12 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-Now install some basic dependencies:
+Now install some basic system packages:
 ```
-sudo apt-get install git vim htop
+sudo apt-get install git vim htop python-pip upstart
 ```
+
+Reboot your pi after the above
 
 ## Wireless connection
 Connect your wifi dongle to the RPi and power it up.
