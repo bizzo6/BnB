@@ -2,7 +2,7 @@
 '''
 Created: 04/10/2015
 
-@author: Nati
+@author: bizzo6
 '''
 import logging
 
@@ -30,7 +30,7 @@ BASIC_AUTH_USERNAME = 'banana'
 BASIC_AUTH_PASSWORD = 'blat'
 DEBUG_MODE = True           # Flask debug mode
 HOST_ADDRESS = '0.0.0.0'    # use 0.0.0.0 to listen to external connections
-HOST_PORT = 9090
+HOST_PORT = 5000
 HOST_SSL = True             # True to enable https, Flase to fallback to http
 SERVER_THREADED = True     # Flask debug server in multi-threading mode
 HOST_CERT_PATH = 'certs/host.cert'

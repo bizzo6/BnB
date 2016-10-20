@@ -2,7 +2,7 @@
 '''
 Created: 30/09/2015
 
-@author: Nati
+@author: bizzo6
 '''
 
 

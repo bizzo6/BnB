@@ -8,7 +8,19 @@ https://www.raspberrypi.org/downloads/raspbian/
 ```
 sudo dd bs=4M if=2016-03-18-raspbian-jessie.img of=/dev/mmcblk0
 ```
+After dd is done (it will take a while), run 'sync' and remove the SDCard. Now Plug it again so new partition will appear.
+Use gparted (under Ubuntu) to extend the newly created partition to the full size of your SDCard:
+```
+gksudo gparted
+```
 Remove the SD and place in the RPi to boot up.
+
+Now find your RPi on the network:
+```
+sudo nmap -sP 192.168.1.0/24 | awk '/^Nmap/{ip=$NF}/B8:27:EB/{print ip}'
+```
+Note: replace 192.168.1.0 with your ip address range
+
 Login using default credentials:
 ```
 User: pi
@@ -46,7 +58,8 @@ sudo apt-get upgrade
 
 Now install some basic system packages:
 ```
-sudo apt-get install git vim htop python-pip upstart
+sudo apt-get install python-dev git vim htop python-pip upstart lshw tcpdump redis-server
+sudo pip install git-up redis
 ```
 
 Reboot your pi after the above

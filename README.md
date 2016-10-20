@@ -35,3 +35,34 @@ sudo start bnb
 sudo stop bnb
 sudo status bnb
 ```
+
+## Network devices
+
+Some basic Wifi Dongles that support this setup:
+
+* Ralink RT5370
+** Chipset: 
+** Driver: rt2800usb
+** Monitor mode: Supported
+
+* Realtek RTL8188CUS
+** Chipset: Realtek RTL8188CUS
+** Driver: rtl819x
+** Monitor mode: NOT Supported
+
+* Edimax EW-7811Un
+** Chipset: Realtek RTL8188CUS
+** Driver: rtl819x
+** Monitor mode: NOT Supported
+
+Check your setup using:
+```
+sudo lshw -class network
+```
+
+## Find my Pi
+Use nmap to find the ip address your Pi got from the local DHCP:
+```
+sudo nmap -sP 192.168.1.0/24 | awk '/^Nmap/{ip=$NF}/B8:27:EB/{print ip}'
+```
+Note: replace 192.168.1.0 with your ip segment
