@@ -1,3 +1,7 @@
 .idea/
 *.pyc
 conf/bnb.conf.local
+logs/
+db/
+_resources/
+certs/

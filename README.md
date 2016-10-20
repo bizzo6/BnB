@@ -1,7 +1,7 @@
 # BnB
 
 ## Overview
-A low cost smart and secure home utility running on your Raspberry Pi
+A low cost smart and secure home automation server running on your Raspberry Pi
 
 # Setting Up
 
@@ -10,7 +10,9 @@ A low cost smart and secure home utility running on your Raspberry Pi
 Following are needed:
 
 ```
-sudo pip install flask flask-restful flask-httpauth
+sudo apt-get install redis-server
+sudo pip install flask flask-restful flask-httpauth redis
+sudo pip install pyfcm
 ```
 
 ## SSL Context
