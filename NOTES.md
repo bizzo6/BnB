@@ -1,23 +1,25 @@
 # Notes:
 
 
-## kerberos
+## MotionEye
+
+We will use the MotionEye as our DVR for this example.
+
+### Installation:
+TBD: installing MotionEye goes here..
+
+### Adding SSL with nginx:
+see:  https://blog.dantup.com/2016/03/installing-lighttpd-php7-and-letsencrypt-on-raspberry-pi-raspbian-jessie-lite/
+sudo apt-get install nginx
+letsencrypt certonly --webroot -w /usr/share/nginx/html -d your.domain.com
+
+Convert the generated pem to crt/key:
+openssl x509 -outform der -in certificate.pem -out certificate.crt
 
 
-Some missing packages:
-sudo apt-get install libtiff-tools
+sudo /etc/init.d/nginx start | stop
 
-https://www.scalescale.com/tips/nginx/install-memcached-ubuntu/
-sudo apt-get install memcached
-sudo apt-get install php5-memcached
-
-And than do this for the above to take effect:
-sudo service php5-fpm restart.
-
-
-See nginx errors here:
-/var/log/nginx/nginx_error.log
-
+sudo vim /etc/nginx/sites-available/sitenamehere
 
 
 ## Monitor Mode:
@@ -44,3 +46,26 @@ http://hackoftheday.securitytube.net/2013/03/wi-fi-sniffer-in-10-lines-of-python
 http://askldjd.com/2014/01/15/a-reasonably-fast-python-ip-sniffer/
 
 https://bitbucket.org/LaNMaSteR53/wuds
+
+## Some Raspibian teaks:
+
+Rotate logs and cleanup:
+```
+sudo logrotate -f /etc/logrotate.conf
+sudo rm /var/log/*.1
+sudo rm /var/log/*.gz
+```
+
+See which folder taking so much space:
+```
+du -Pshx /path/here/* 2>/dev/null
+```
+
+Start/Stop services:
+````
+sudo systemctl stop nginx.service
+sudo systemctl start nginx.service
+
+sudo systemctl stop motioneye.service
+sudo systemctl start motioneye.service
+```
