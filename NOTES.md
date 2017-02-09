@@ -13,22 +13,27 @@ see: https://blog.radityakertiyasa.com/2015/03/raspberrypi-nginx-secure-reverse-
 And now add SSL with letsencrypt using this tutorial:
 see:  https://blog.dantup.com/2016/03/installing-lighttpd-php7-and-letsencrypt-on-raspberry-pi-raspbian-jessie-lite/
 
+```
 sudo apt-get install nginx
 letsencrypt certonly --webroot -w /usr/share/nginx/html -d your.domain.com
+```
 
 Convert the generated pem to crt/key:
+```
 openssl x509 -outform der -in certificate.pem -out certificate.crt
+```
 
-
+```
 sudo /etc/init.d/nginx start | stop
-
 sudo vim /etc/nginx/sites-available/sitenamehere
-
+```
 
 and every 90 days just run:
+```
 letsencrypt renew
 sudo /etc/init.d/nginx stop
 sudo /etc/init.d/nginx start
+```
 
 ## Monitor Mode:
 
