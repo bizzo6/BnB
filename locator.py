@@ -51,7 +51,7 @@ class locator(object):NA
         :param interface:
         :return:
         '''
-        self.logger.info("Setting interface %s to monitor mNAode", self.interface)
+        self.logger.info("Setting interface %s to monitor mode", self.interface)
         self.runcmd(["ifconfig", self.interface, "down"])
         self.runcmd(["iwconfig", self.interface, "mode", "monitor"])
         self.runcmd(["ifconfig", self.interface, "up"])
