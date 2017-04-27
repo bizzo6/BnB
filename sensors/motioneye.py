@@ -1,3 +1,4 @@
+from conf.configuration import *
 import libs
 import hashlib
 import json
@@ -7,13 +8,6 @@ import re
 import logging
 import requests
 from random import randint
-
-# MotionEye Defaults:
-MOTIONEYE_PORT = '8765'
-MOTIONEYE_HOST = '127.0.0.1'
-MOTIONEYE_SCHEME = 'http'
-MOTIONEYE_USERNAME = 'admin'
-MOTIONEYE_PASSWORD = '12345678'
 
 # Signature Defaults
 _SIGNATURE_REGEX = re.compile('[^a-zA-Z0-9/?_.=&{}\[\]":, _-]')
@@ -32,10 +26,10 @@ class meyeclient(object):
 
         self.baseurl = '%s://%s:%s' % (self.scheme, self.host, self.port)
 
-    def generate_random(self):
+    def _generate_random(self):
         return randint(1, 10000)
 
-    def signature(self, method, path, body, key):
+    def _signature(self, method, path, body, key):
         parts = list(urlparse.urlsplit(path))
         query = [q for q in urlparse.parse_qsl(parts[3], keep_blank_values=True) if (q[0] != '_signature')]
         query.sort(key=lambda q: q[0])
@@ -56,7 +50,7 @@ class meyeclient(object):
         return hashlib.sha1('%s:%s:%s:%s' % (method, path, body or '', key)).hexdigest().lower()
 
     def request(self, url, method, data = ''):
-        finalurl = url + '&_signature=' + self.signature(method, url, data, self.password)
+        finalurl = url + '&_signature=' + self._signature(method, url, data, self.password)
         self.logger.debug('REQUEST: %s', finalurl)
 
         if method == 'GET':
@@ -72,7 +66,7 @@ class meyeclient(object):
             return False
 
     def camera_get_config(self, cam):
-        url = self.baseurl + '/config/%d/get/?_=%s&_username=%s' % (cam, self.generate_random(), self.username)
+        url = self.baseurl + '/config/%d/get/?_=%s&_username=%s' % (cam, self._generate_random(), self.username)
         self.logger.info("Getting cam #%d config from meye server", cam)
         res = self.request(url, 'GET')
         if res:
@@ -84,7 +78,7 @@ class meyeclient(object):
 
 
     def camera_set_config(self, cam, configs):
-        url = self.baseurl + '/config/0/set/?_=%s&_username=%s' % (self.generate_random(), self.username)
+        url = self.baseurl + '/config/0/set/?_=%s&_username=%s' % (self._generate_random(), self.username)
         self.logger.info("Setting cam #%d config on meye server", cam)
         configs = {str(cam): configs}
         res = self.request(url, 'POST', json.dumps(configs))
@@ -114,3 +108,9 @@ class meyeclient(object):
             return False
 
         return True
+
+
+# DEBUG:
+cam = meyeclient()
+cam.camera_state(3, True)
+del cam
