@@ -28,12 +28,14 @@ sudo /etc/init.d/nginx start | stop
 sudo vim /etc/nginx/sites-available/sitenamehere
 ```
 
-and every 90 days just run:
+#### Renewal
+Every 90 days just run (make sure you open port 80 on your router):
 ```
-letsencrypt renew
+sudo letsencrypt renew
 sudo /etc/init.d/nginx stop
 sudo /etc/init.d/nginx start
 ```
+and now disable back your port forwarding for port 80 for better security
 
 ## Monitor Mode:
 
@@ -51,7 +53,6 @@ sudo apt-get install python-pcapy
 ```
 
 
-
 https://bitbucket.org/LaNMaSteR53/wuds/src/a8f5c04aecf3d46e23a16fe74695738e94611b0f/core.py?fileviewer=file-view-default
 
 
@@ -60,7 +61,7 @@ http://askldjd.com/2014/01/15/a-reasonably-fast-python-ip-sniffer/
 
 https://bitbucket.org/LaNMaSteR53/wuds
 
-## Some Raspibian teaks:
+## Some Raspbian tweaks:
 
 Rotate logs and cleanup:
 ```
@@ -75,10 +76,22 @@ du -Pshx /path/here/* 2>/dev/null
 ```
 
 Start/Stop services:
-````
+```
 sudo systemctl stop nginx.service
 sudo systemctl start nginx.service
 
 sudo systemctl stop motioneye.service
 sudo systemctl start motioneye.service
 ```
+
+
+## OrangePi Zero Stuff
+
+Flask and GPIO example:
+https://www.hackster.io/chedadsp/hello-orange-pi-zero-cfaa26
+
+Install:
+sudo apt-get install python-dev python-setuptools python-pip
+sudo pip install flask
+
+

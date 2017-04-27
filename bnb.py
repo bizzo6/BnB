@@ -4,11 +4,10 @@ Created: 04/10/2015
 
 @author: bizzo6
 '''
+from conf.configuration import *
 import logging
-
 import time
 from datetime import datetime, timedelta
-
 from flask import Flask, jsonify, abort, make_response, send_file
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 from flask.ext.httpauth import HTTPBasicAuth
@@ -18,23 +17,26 @@ import signal
 import urllib2
 import libs
 
-# Params:
-BNB_VERSION = "0.001.31032016"
-
 # DEFAULT RESPONSES:
 RESP_STATUS_OK = 'OK'
 RESP_STATUS_NOT_OK = 'error'
 
 # Flask Server Params:
-BASIC_AUTH_USERNAME = 'banana'
-BASIC_AUTH_PASSWORD = 'blat'
+BASIC_AUTH_USERNAME = BNB_USERNAME
+BASIC_AUTH_PASSWORD = BNB_PASSWORD
 DEBUG_MODE = True           # Flask debug mode
 HOST_ADDRESS = '0.0.0.0'    # use 0.0.0.0 to listen to external connections
-HOST_PORT = 5000
+HOST_PORT = int(BNB_PORT)
 HOST_SSL = False             # True to enable https, False to fallback to http
 SERVER_THREADED = True     # Flask debug server in multi-threading mode
 HOST_CERT_PATH = 'certs/host.cert'
 HOST_KEY_PATH = 'certs/host.key'
+
+# Flask defaults
+RESPONSE_DEFAULT = {'status': RESP_STATUS_OK,
+                    'data': {}}
+
+
 
 # Initiate Values
 startTime = time.time()
@@ -43,7 +45,7 @@ startTime = time.time()
 app = Flask(__name__, static_url_path="")
 api = Api(app)
 auth = HTTPBasicAuth()
-        
+
 @auth.get_password
 def get_password(username):
     if username == BASIC_AUTH_USERNAME:
@@ -63,12 +65,15 @@ class BnBStatus(Resource):
 
     @auth.login_required
     def get(self):
+        res = RESPONSE_DEFAULT
         # Calculate stats:
         uptime = datetime(1, 1, 1) + timedelta(seconds=(time.time() - startTime))
         suptime = "%02d:%02d:%02d:%02d" % (uptime.day-1, uptime.hour, uptime.minute, uptime.second)
-        return {'status': RESP_STATUS_OK,
-                'version': BNB_VERSION,
-                'uptime': suptime}
+        # Set values:
+        resdata = res['data']
+        resdata['version'] = BNB_VERSION
+        resdata['uptime'] = suptime
+        return res
 
     def post(self):
         abort(404)
@@ -79,13 +84,45 @@ class BnBStatus(Resource):
     def delete(self):
         abort(404)
         
-        
+class BnBCamAPI(Resource):
+    def __init__(self):
+        super(BnBCamAPI, self).__init__()
+
+    @auth.login_required
+    def get(self, id, type, cmd):
+        # Handle get command:
+        if type == "get":
+            print "Got get"
+
+        # Handle set command
+        if type == "set":
+            print "Got set"
+
+
+
+
+        return {'status': RESP_STATUS_OK,
+                'version': BNB_VERSION,
+                'id': id,
+                'type': type,
+                'cmd': cmd}
+
+    def post(self,id):
+        abort(404)
+
+    def put(self,id):
+        abort(404)
+
+    def delete(self,id):
+        abort(404)
+
+
 class BnBSensorAPI(Resource):
     def __init__(self):
         super(BnBSensorAPI, self).__init__()
 
     @auth.login_required
-    def get(self,id):
+    def get(self, id):
         response = urllib2.urlopen('http://weknowyourdreams.com/images/banana/banana-06.jpg')
         snapshot = response.read()
         return send_file(BytesIO(snapshot),attachment_filename='snapshot.jpg',mimetype='image/jpg')
@@ -100,8 +137,9 @@ class BnBSensorAPI(Resource):
         abort(404)
     
 
-api.add_resource(BnBStatus,     '/bnb/api/v1/status/')
-api.add_resource(BnBSensorAPI,  '/bnb/api/v1/sensor/<int:id>')
+api.add_resource(BnBStatus,     '/bnb/status')
+api.add_resource(BnBCamAPI,  '/bnb/cam/<int:id>/<string:type>/<string:cmd>')
+api.add_resource(BnBSensorAPI,  '/bnb/sensor/<int:id>')
 
 
 def sigterm_handler(_signo, _stack_frame):

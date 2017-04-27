@@ -20,7 +20,10 @@ def getint(section, value):
     return config.getint(section, value)
 
 # [system]
-SYSTEM_VERSION = getstr("system", "system_version")
+BNB_VERSION = getstr("system", "system_version")
+BNB_USERNAME = getstr("system", "bnb_username")
+BNB_PASSWORD = getstr("system", "bnb_password")
+BNB_PORT = getstr("system", "bnb_port")
 
 # [notifier]
 NOTIFIER_GCM_API_KEY = getstr("notifier", "notifier_gcm_api_key")
@@ -33,3 +36,10 @@ LOCATOR_PCAPY_SNAPLEN_INT = getint("locator", "locator_pcapy_snaplen_int")
 # [debug]
 LOCATOR_TEST_MAC_1 = getstr("debug", "locator_test_mac_1")
 LOCATOR_TEST_MAC_2 = getstr("debug", "locator_test_mac_2")
+
+# [motioneye]
+MOTIONEYE_USERNAME = getstr("motioneye", "meye_username")
+MOTIONEYE_PASSWORD = getstr("motioneye", "meye_password")
+MOTIONEYE_HOST = getstr("motioneye", "meye_host")
+MOTIONEYE_PORT = getstr("motioneye", "meye_port")
+
