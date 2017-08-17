@@ -1,0 +1,12 @@
+[Unit]
+Description=BnB Server
+
+[Service]
+WorkingDirectory=/home/pi/BnB/
+ExecStart=/usr/bin/python /home/pi/BnB/bnb.py
+Restart=always
+StandardOutput=syslog+console
+StandardError=syslog+console
+
+[Install]
+WantedBy=multi-user.target

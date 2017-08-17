@@ -9,15 +9,21 @@ import logging
 import requests
 from random import randint
 
+# Params
+SENSOR_DEFAULT_ID = 0
+DEFAULT_CAMERA_ID = 0
+
 # Signature Defaults
 _SIGNATURE_REGEX = re.compile('[^a-zA-Z0-9/?_.=&{}\[\]":, _-]')
 _DOUBLE_SLASH_REGEX = re.compile('//+')
 
 class meyeclient(object):
-    def __init__(self, host=MOTIONEYE_HOST, port=MOTIONEYE_PORT, scheme=MOTIONEYE_SCHEME, username=MOTIONEYE_USERNAME, password=MOTIONEYE_PASSWORD):
+    def __init__(self, sensorid=SENSOR_DEFAULT_ID, cameraid=DEFAULT_CAMERA_ID, host=MOTIONEYE_HOST, port=MOTIONEYE_PORT, scheme=MOTIONEYE_SCHEME, username=MOTIONEYE_USERNAME, password=MOTIONEYE_PASSWORD):
         self.logger = logging.getLogger(libs.bnbutils.LOGGING_LOGGER_NAME)
 
         # Globals
+        self.id = sensorid
+        self.camid = cameraid
         self.scheme = scheme
         self.port = port
         self.host = host
@@ -25,6 +31,14 @@ class meyeclient(object):
         self.password = password
 
         self.baseurl = '%s://%s:%s' % (self.scheme, self.host, self.port)
+
+    # Exports:
+
+    def id(self):
+        return self.id
+
+
+    # Private:
 
     def _generate_random(self):
         return randint(1, 10000)
@@ -71,9 +85,11 @@ class meyeclient(object):
         res = self.request(url, 'GET')
         if res:
             self.logger.info("Got cam #%d config successfully!", cam)
+            self.logger.debug("RESPONSE: %s", res)
             return json.loads(res)
         else:
             self.logger.error("Error in getting cam #%d config!", cam)
+            self.logger.debug("ERROR: %s", res)
             return False
 
 
@@ -89,7 +105,14 @@ class meyeclient(object):
             self.logger.error("Error in setting cam #%d config!", cam)
             return False
 
-    def camera_state(self, cam, state):
+    def camera_update_config(self, cam, configs):
+        '''
+        This will read current config, update relevant values, and set it back to the camera
+        TBD: keep a local config for each camera so we won't need to read it on every update
+        :param cam:
+        :param configs:
+        :return:
+        '''
         # GET CONFIG
         current_config = self.camera_get_config(cam)
         if not current_config:
@@ -97,20 +120,35 @@ class meyeclient(object):
             return False
 
         # UPDATE CONFIG
-        self.logger.debug("Current enable set to  " + str(current_config['enabled']))
-        self.logger.info("Setting cam #%d state to %s", cam, state)
-        current_config['enabled'] = state
+        for key in configs:
+            self.logger.debug("Current param %s is set to %s", key, str(current_config[key]))
+            self.logger.info("Setting cam #%d param %s to %s", cam, key, configs[key])
+            current_config[key] = configs[key]
 
         # SET CONFIG
         res = self.camera_set_config(cam, current_config)
         if not res:
-            self.logger.error("Error in setting camera state!")
+            self.logger.error("Error in setting camera config!")
             return False
 
         return True
 
 
-# DEBUG:
-cam = meyeclient()
-cam.camera_state(3, True)
-del cam
+    def get(self, param):
+        '''
+        Returns the value of the request param
+        :param key:
+        :return:
+        '''
+        return self.camera_get_config(self.camid)[param]
+
+    def set(self, key, value):
+        '''
+        Returns the value of the request param
+        :param key:
+        :param value:
+        :return:
+        '''
+        configs = {}
+        configs[key] = value
+        return self.camera_update_config(self.camid, configs)

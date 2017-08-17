@@ -32,6 +32,7 @@ sudo vim /etc/nginx/sites-available/sitenamehere
 Every 90 days just run (make sure you open port 80 on your router):
 ```
 sudo letsencrypt renew
+sudo /etc/init.d/nginx configtest
 sudo /etc/init.d/nginx stop
 sudo /etc/init.d/nginx start
 ```
@@ -84,6 +85,25 @@ sudo systemctl stop motioneye.service
 sudo systemctl start motioneye.service
 ```
 
+Working with systemd:
+```
+# Put all [name].service services under:
+/etc/systemd/system/
+
+#See logs with:
+sudo journalctl  --follow --unit=bnb
+sudo journalctl --unit=bnb
+
+# Control services:
+sudo systemctl daemon-reload
+sudo systemctl enable bnb
+sudo systemctl disable bnb
+sudo systemctl start bnb
+sudo systemctl status bnb
+
+```
+
+
 
 ## OrangePi Zero Stuff
 
@@ -95,3 +115,9 @@ sudo apt-get install python-dev python-setuptools python-pip
 sudo pip install flask
 
 
+
+# Android Stuff (TBD)
+
+Volley for http requests:
+http://arnab.ch/blog/2013/08/asynchronous-http-requests-in-android-using-volley/
+https://developer.android.com/training/volley/simple.html

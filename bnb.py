@@ -16,6 +16,8 @@ import sys
 import signal
 import urllib2
 import libs
+from sensor_control import BnBSensorController
+from alarm_control import BnBAlarmController
 
 # DEFAULT RESPONSES:
 RESP_STATUS_OK = 'OK'
@@ -40,6 +42,13 @@ RESPONSE_DEFAULT = {'status': RESP_STATUS_OK,
 
 # Initiate Values
 startTime = time.time()
+
+# Handlers and Controllers
+sensors = BnBSensorController()
+
+# Alarms
+alarms = BnBAlarmController()
+
 
 # Start FLASK application
 app = Flask(__name__, static_url_path="")
@@ -84,28 +93,28 @@ class BnBStatus(Resource):
     def delete(self):
         abort(404)
         
-class BnBCamAPI(Resource):
+class BnBSensorAPI(Resource):
     def __init__(self):
-        super(BnBCamAPI, self).__init__()
+        super(BnBSensorAPI, self).__init__()
 
     @auth.login_required
     def get(self, id, type, cmd):
+        # Default response
+        res = RESPONSE_DEFAULT
+
         # Handle get command:
         if type == "get":
-            print "Got get"
+            print "Got get command"
 
         # Handle set command
         if type == "set":
             print "Got set"
 
-
-
+        print cmd
+        result = sensors.handler(id, type, cmd)
 
         return {'status': RESP_STATUS_OK,
-                'version': BNB_VERSION,
-                'id': id,
-                'type': type,
-                'cmd': cmd}
+                'data': result }
 
     def post(self,id):
         abort(404)
@@ -117,15 +126,47 @@ class BnBCamAPI(Resource):
         abort(404)
 
 
-class BnBSensorAPI(Resource):
+class BnBAlarmAPI(Resource):
     def __init__(self):
-        super(BnBSensorAPI, self).__init__()
+        super(BnBAlarmAPI, self).__init__()
+
+    @auth.login_required
+    def get(self, cmd):
+        # Default response
+        res = RESPONSE_DEFAULT
+
+        # Handle start alarm:
+        if cmd == "on":
+            print "Starting ALARM!"
+
+        # Handle set command
+        if cmd == "off":
+            print "Stopping ALARM!"
+
+        result = alarms.handler(cmd)
+
+        return {'status': RESP_STATUS_OK,
+                'data': result }
+
+    def post(self, cmd):
+        abort(404)
+
+    def put(self, cmd):
+        abort(404)
+
+    def delete(self, cmd):
+        abort(404)
+
+
+class BnBTestAPI(Resource):
+    def __init__(self):
+        super(BnBTestAPI, self).__init__()
 
     @auth.login_required
     def get(self, id):
         response = urllib2.urlopen('http://weknowyourdreams.com/images/banana/banana-06.jpg')
         snapshot = response.read()
-        return send_file(BytesIO(snapshot),attachment_filename='snapshot.jpg',mimetype='image/jpg')
+        return send_file(BytesIO(snapshot), attachment_filename='snapshot.jpg', mimetype='image/jpg')
 
     def post(self,id):
         abort(404)
@@ -137,9 +178,10 @@ class BnBSensorAPI(Resource):
         abort(404)
     
 
-api.add_resource(BnBStatus,     '/bnb/status')
-api.add_resource(BnBCamAPI,  '/bnb/cam/<int:id>/<string:type>/<string:cmd>')
-api.add_resource(BnBSensorAPI,  '/bnb/sensor/<int:id>')
+api.add_resource(BnBStatus,     '/status')
+api.add_resource(BnBSensorAPI,  '/sensor/<int:id>/<string:type>/<string:cmd>')
+api.add_resource(BnBAlarmAPI,  '/alarm/<string:cmd>')
+#api.add_resource(BnBSensorAPI,  '/bnb/sensor/<int:id>')
 
 
 def sigterm_handler(_signo, _stack_frame):

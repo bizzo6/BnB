@@ -38,6 +38,12 @@ sudo stop bnb
 sudo status bnb
 ```
 
+Using the systemd system:
+```
+systemctl start bnb
+systemctl stop bnb
+```
+
 ## Network devices
 
 Some basic Wifi Dongles that support this setup:

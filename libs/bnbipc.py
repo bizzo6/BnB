@@ -6,10 +6,12 @@ from json import dumps
 ## http://redis.io/topics/data-types-intro
 
 BNBIPC_QUEUE = 'BNBIPC_QUEUE'
+BNB_SENSORS_CONTROLLER_QUEUE = 'bnb_queue_sensor_controller'
 LOCATOR_BNBIPC_QUEUE = 'bnb_locator_probes'
 BNB_KEYVALUE = 'BNB_KEYVALUE'
 
 BNB_USER_KEYNAME = "bnb_user:"
+
 
 class bnbipc(object):
     def __init__(self):
@@ -38,6 +40,7 @@ class bnbipc(object):
         user = self.red.hgetall(userkey)
         return user
 
+    # SENSOR CONTROLLER QUEUE (TBD)
 
     def poplocatorprobe(self):
         '''
@@ -72,6 +75,10 @@ class bnbipc(object):
         '''
         return self.red.lrange(BNBIPC_QUEUE, 0, -1)
 
+    # GET SET TEMPLATE
+    # -----------------------------------------
+
+
     def getvalue(self):
         '''
         Returns if of of currently on the go fetch request. "" if nothing is in progress
@@ -87,6 +94,9 @@ class bnbipc(object):
         '''
         self.red.set(BNB_KEYVALUE, str(value))
 
+
+    # ERROR QUEUE
+    #--------------------------------
 
     def popfulllist(self):
         '''

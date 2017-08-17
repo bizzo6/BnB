@@ -33,7 +33,7 @@ from datetime import datetime
 LINKTYPE_IEEE802_11_RADIOTAP = 0x7F
 LINKTYPE_IEEE802_11 = 0x70
 
-class locator(object):NA
+class locator(object):
 
     def __init__(self, interface=LOCATOR_MONITOR_INTERFACE, defaultchannel=LOCATOR_DEFAULT_CHANNEL_INT):
         self.logger = logging.getLogger(libs.bnbutils.LOGGING_LOGGER_NAME)

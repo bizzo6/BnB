@@ -42,5 +42,5 @@ MOTIONEYE_USERNAME = getstr("motioneye", "meye_username")
 MOTIONEYE_PASSWORD = getstr("motioneye", "meye_password")
 MOTIONEYE_HOST = getstr("motioneye", "meye_host")
 MOTIONEYE_PORT = getstr("motioneye", "meye_port")
-MOTIONEYE_SCHEME = getstr("motioneye", "meye_scheme")
 
+MOTIONEYE_SCHEME = getstr("motioneye", "meye_scheme")
