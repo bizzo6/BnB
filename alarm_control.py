@@ -15,6 +15,12 @@ PLAY_CMD = 'mpg123 --loop -1 ' + ALARM_FILE
 NOTE! make sure to run this command:
 amixer cset numid=3 1
 on startup. This will make sure audio output goes to audio jack (And not HDMI or something else)
+
+Also, set volume with this tool:
+alsamixer
+
+see: http://karuppuswamy.com/wordpress/2015/08/15/configuring-alsa-audio-output-on-analog-and-hdmi-of-raspberry-pi/
+
 '''
 
 class BnBAlarmController(object):
@@ -27,6 +33,7 @@ class BnBAlarmController(object):
         #self.ips = libs.bnbipc.bnbipc()
 
         # Set audio output to 3.5mm jack:
+        os.system('amixer cset numid=3 1')
         os.system('amixer cset numid=3 1')
 
         # Set Alarms File:
