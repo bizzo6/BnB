@@ -1,0 +1,12 @@
+[Unit]
+Description=Xiaomi Gateway Listener
+
+[Service]
+WorkingDirectory=/home/pi/BnB/
+ExecStart=/usr/bin/python /home/pi/BnB/gateway_listener.py
+Restart=always
+StandardOutput=syslog+console
+StandardError=syslog+console
+
+[Install]
+WantedBy=multi-user.target

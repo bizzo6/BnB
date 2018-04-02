@@ -42,5 +42,10 @@ MOTIONEYE_USERNAME = getstr("motioneye", "meye_username")
 MOTIONEYE_PASSWORD = getstr("motioneye", "meye_password")
 MOTIONEYE_HOST = getstr("motioneye", "meye_host")
 MOTIONEYE_PORT = getstr("motioneye", "meye_port")
-
 MOTIONEYE_SCHEME = getstr("motioneye", "meye_scheme")
+
+# [gateway_listener]
+GATEWAY_LISTENER_SLACKAPI = getstr("gateway_listener", "gateway_listener_slackapi")
+GATEWAY_LISTENER_SID_1 = getstr("gateway_listener", "gateway_listener_sid_1")
+GATEWAY_LISTENER_SID_2 = getstr("gateway_listener", "gateway_listener_sid_2")
+GATEWAY_LISTENER_SID_3 = getstr("gateway_listener", "gateway_listener_sid_3")

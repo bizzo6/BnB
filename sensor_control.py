@@ -21,8 +21,9 @@ class BnBSensorController(object):
 
         # Set Sensors list:
         self.sensors = []
-        self.sensors.append(meyeclient(sensorid=0, cameraid=3))
+        self.sensors.append(meyeclient(sensorid=0, cameraid=1))
         self.sensors.append(meyeclient(sensorid=1, cameraid=4))
+        self.sensors.append(meyeclient(sensorid=2, cameraid=3))
 
     def sensor(self, id):
         return self.sensors[id]
