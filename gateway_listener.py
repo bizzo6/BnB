@@ -12,13 +12,12 @@ Description:
 import logging
 import socket
 import json
-import re
+import time
+import requests
 from slackclient import SlackClient
-
 from conf.configuration import *
 import struct
 import libs
-from datetime import datetime
 
 MCAST_PORT = 9898
 BUFFER_SIZE = 1024
@@ -26,12 +25,25 @@ MCAST_ADDRESS = "224.0.0.50"
 
 # SENSORS:
 DOORS = [
-    {'sid': GATEWAY_LISTENER_SID_1, 'status_to_trigger': "open", "notification_msg": "Storage Room Door is OPEN!"},
-    {'sid': GATEWAY_LISTENER_SID_2, 'status_to_trigger': "open", "notification_msg": "Front Door is OPEN!"},
-    {'sid': GATEWAY_LISTENER_SID_3, 'status_to_trigger': "open", "notification_msg": "Balcony is OPEN!"}
+    {'sid': GATEWAY_LISTENER_SID_1,
+     'name': GATEWAY_LISTENER_SID_1_NAME,
+     'status_to_trigger': "open",
+     "notification_msg": "is OPEN!",
+     "snapshot_url": GATEWAY_LISTENER_SID_1_SNAPSHOT_URL
+     },
+    {'sid': GATEWAY_LISTENER_SID_2,
+     'name': GATEWAY_LISTENER_SID_2_NAME,
+     'status_to_trigger': "open",
+     "notification_msg": "is OPEN!",
+     "snapshot_url": GATEWAY_LISTENER_SID_2_SNAPSHOT_URL
+     },
+    {'sid': GATEWAY_LISTENER_SID_3,
+     'name': GATEWAY_LISTENER_SID_3_NAME,
+     'status_to_trigger': "open",
+     "notification_msg": "is OPEN!",
+     "snapshot_url": GATEWAY_LISTENER_SID_3_SNAPSHOT_URL
+     }
 ]
-
-
 
 class slackbot(object):
 
@@ -58,6 +70,16 @@ class slackbot(object):
             text=msg)
         self.logger.debug("Slack Bot (%s): %s" % (channel, msg))
 
+    def send_image(self, image, msg, channel):
+        #with open('test.jpg', 'rb') as file_content:
+        self.client.api_call(
+            "files.upload",
+            channels=channel,
+            file=image,
+            filename='test.jpg',
+            filetype='jpg',
+            title=msg)
+        self.logger.debug("Slack Bot (%s): Uploading Image Titled %s" % (channel, msg))
 
 class listener(object):
 
@@ -84,6 +106,9 @@ class listener(object):
         else:
             return False
 
+    def get_snapshot(self, url):
+        return requests.get(url).content
+
     def run(self, bot):
         '''
         Main process loop
@@ -100,7 +125,15 @@ class listener(object):
                 if sid == trigger['sid']:
                     packetdata = json.loads(self.jsonget(packet, 'data'))
                     if trigger['status_to_trigger'] == self.jsonget(packetdata, 'status'):
-                        bot.send_msg(trigger['notification_msg'], "home")
+                        # Got an event we need to notify about:
+                        notification_msg = trigger['name'] + ' ' + trigger['notification_msg']
+                        bot.send_msg(notification_msg, "home")
+
+                        # Should we also send a snapshot?
+                        if trigger['snapshot_url']:
+                            time.sleep(2)
+                            snapshot = self.get_snapshot(trigger['snapshot_url'])
+                            bot.send_image(snapshot, trigger['name'], "home")
 
 # Connect to slack:
 bot = slackbot()
