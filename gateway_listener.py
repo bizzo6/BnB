@@ -24,7 +24,7 @@ BUFFER_SIZE = 1024
 MCAST_ADDRESS = "224.0.0.50"
 
 # SENSORS:
-DOORS = [
+TRIGGERS = [
     {'sid': GATEWAY_LISTENER_SID_1,
      'name': GATEWAY_LISTENER_SID_1_NAME,
      'status_to_trigger': "open",
@@ -42,6 +42,12 @@ DOORS = [
      'status_to_trigger': "open",
      "notification_msg": "is OPEN!",
      "snapshot_url": GATEWAY_LISTENER_SID_3_SNAPSHOT_URL
+     },
+    {'sid': GATEWAY_LISTENER_SID_4,
+     'name': GATEWAY_LISTENER_SID_4_NAME,
+     'status_to_trigger': "click",
+     "notification_msg": "Clicked!",
+     "snapshot_url": GATEWAY_LISTENER_SID_4_SNAPSHOT_URL
      }
 ]
 
@@ -121,7 +127,7 @@ class listener(object):
 
             packet = json.loads(data)
             sid = packet['sid']
-            for trigger in DOORS:
+            for trigger in TRIGGERS:
                 if sid == trigger['sid']:
                     packetdata = json.loads(self.jsonget(packet, 'data'))
                     if trigger['status_to_trigger'] == self.jsonget(packetdata, 'status'):

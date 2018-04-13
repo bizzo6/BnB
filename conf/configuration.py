@@ -55,3 +55,6 @@ GATEWAY_LISTENER_SID_2_SNAPSHOT_URL = getstr("gateway_listener", "gateway_listen
 GATEWAY_LISTENER_SID_3 = getstr("gateway_listener", "gateway_listener_sid_3")
 GATEWAY_LISTENER_SID_3_NAME = getstr("gateway_listener", "gateway_listener_sid_3_name")
 GATEWAY_LISTENER_SID_3_SNAPSHOT_URL = getstr("gateway_listener", "gateway_listener_sid_3_snapshot_url")
+GATEWAY_LISTENER_SID_4 = getstr("gateway_listener", "gateway_listener_sid_4")
+GATEWAY_LISTENER_SID_4_NAME = getstr("gateway_listener", "gateway_listener_sid_4_name")
+GATEWAY_LISTENER_SID_4_SNAPSHOT_URL = getstr("gateway_listener", "gateway_listener_sid_4_snapshot_url")
