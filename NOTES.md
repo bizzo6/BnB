@@ -15,6 +15,7 @@ see:  https://blog.dantup.com/2016/03/installing-lighttpd-php7-and-letsencrypt-o
 
 ```
 sudo apt-get install nginx
+sudo apt-get install letsencrypt
 letsencrypt certonly --webroot -w /usr/share/nginx/html -d your.domain.com
 ```
 

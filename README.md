@@ -10,9 +10,11 @@ A low cost smart and secure home automation server running on your Raspberry Pi
 Following are needed:
 
 ```
+sudo apt-get install nginx
 sudo apt-get install redis-server
+sudo apt-get install python-pip
+
 sudo pip install flask flask-restful flask-httpauth redis
-sudo pip install pyfcm
 ```
 
 ## SSL Context
