@@ -8,6 +8,11 @@ Module: Gateway Listener (BnB)
 Description:
     Listens to UDP broadcast on port 9898
 
+Interesting Links:
+https://github.com/dgiese/dustcloud-documentation/tree/master/lumi.gateway.v3
+https://aqara.gitbooks.io/lumi-gateway-lan-communication-api/content/message-example/86-wireless-switch-single-button.html
+
+
 '''
 import logging
 import socket

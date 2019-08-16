@@ -9,8 +9,8 @@ import logging
 import time
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, abort, make_response, send_file
-from flask.ext.restful import Api, Resource, reqparse, fields, marshal
-from flask.ext.httpauth import HTTPBasicAuth
+from flask_restful import Api, Resource, reqparse, fields, marshal
+from flask_httpauth import HTTPBasicAuth
 from io import BytesIO
 import sys
 import signal
@@ -35,8 +35,8 @@ HOST_CERT_PATH = 'certs/host.cert'
 HOST_KEY_PATH = 'certs/host.key'
 
 # Flask defaults
-RESPONSE_DEFAULT = {'status': RESP_STATUS_OK,
-                    'data': {}}
+RESPONSE_DEFAULT = {'status': RESP_STATUS_OK, 'data': {}}
+RESPONSE_ERROR = {'status': RESP_STATUS_NOT_OK, 'data': {}}
 
 
 
@@ -158,6 +158,37 @@ class BnBAlarmAPI(Resource):
         abort(404)
 
 
+class BnBTriggerAPI(Resource):
+    def __init__(self):
+        super(BnBTriggerAPI, self).__init__()
+
+    #@auth.login_required
+    def get(self, cmd):
+        # Default response
+        res = RESPONSE_DEFAULT
+        triggerflag = False
+
+        # Handle door trigger:
+        if cmd == "door":
+            print "Triggered front door!"
+            res['data'] = "%s triggered" % cmd
+            alarms.trigger(cmd)
+            triggerflag = True
+
+        if triggerflag:
+            return res
+        return RESPONSE_ERROR
+
+    def post(self, cmd):
+        abort(404)
+
+    def put(self, cmd):
+        abort(404)
+
+    def delete(self, cmd):
+        abort(404)
+
+
 class BnBTestAPI(Resource):
     def __init__(self):
         super(BnBTestAPI, self).__init__()
@@ -181,6 +212,7 @@ class BnBTestAPI(Resource):
 api.add_resource(BnBStatus,     '/status')
 api.add_resource(BnBSensorAPI,  '/sensor/<int:id>/<string:type>/<string:cmd>')
 api.add_resource(BnBAlarmAPI,  '/alarm/<string:cmd>')
+api.add_resource(BnBTriggerAPI,  '/trigger/<string:cmd>')
 #api.add_resource(BnBSensorAPI,  '/bnb/sensor/<int:id>')
 
 

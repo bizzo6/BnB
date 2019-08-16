@@ -44,6 +44,12 @@ MOTIONEYE_HOST = getstr("motioneye", "meye_host")
 MOTIONEYE_PORT = getstr("motioneye", "meye_port")
 MOTIONEYE_SCHEME = getstr("motioneye", "meye_scheme")
 
+# [alarm_triggers]
+ALARM_TRIGGER_SLACKAPI = getstr("alarm_triggers", "alarm_trigger_slackapi")
+ALARM_TRIGGER_NAME_1 = getstr("alarm_triggers", "alarm_trigger_name_1")
+ALARM_TRIGGER_SNAPSHOT_URL_1 = getstr("alarm_triggers", "alarm_trigger_snapshot_url_1")
+ALARM_TRIGGER_NOTIFICATION_1 = getstr("alarm_triggers", "alarm_trigger_notification_1")
+
 # [gateway_listener]
 GATEWAY_LISTENER_SLACKAPI = getstr("gateway_listener", "gateway_listener_slackapi")
 GATEWAY_LISTENER_SID_1 = getstr("gateway_listener", "gateway_listener_sid_1")
